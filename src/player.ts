@@ -67,8 +67,9 @@ export class Player {
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
         e.preventDefault();
-        this.repel = true;
-        this.visible = true;
+        // Only arm repel if we already have a real cursor position.
+        // Otherwise Space would repel from (0,0) before the mouse has moved.
+        if (this.visible) this.repel = true;
       }
       this.keysHeld.add(e.code);
     });
@@ -76,6 +77,12 @@ export class Player {
     window.addEventListener('keyup', (e) => {
       if (e.code === 'Space') this.repel = false;
       this.keysHeld.delete(e.code);
+    });
+
+    window.addEventListener('blur', () => {
+      this.attract = false;
+      this.repel = false;
+      this.keysHeld.clear();
     });
   }
 

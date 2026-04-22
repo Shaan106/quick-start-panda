@@ -85,11 +85,18 @@ export class Flock {
   }
 
   setCount(target: number): void {
+    const excludeR = Math.min(this.width, this.height) * 0.28;
+    const excludeX = this.width * 0.62;
+    const excludeY = this.height * 0.52;
     while (this.boids.length < target) {
       const angle = Math.random() * Math.PI * 2;
       const speed = this.params.minSpeed + Math.random() * (this.params.maxSpeed - this.params.minSpeed);
-      const x = Math.random() * this.width;
-      const y = Math.random() * this.height;
+      let x = 0, y = 0, tries = 0;
+      do {
+        x = Math.random() * this.width;
+        y = Math.random() * this.height;
+        tries++;
+      } while (tries < 8 && Math.hypot(x - excludeX, y - excludeY) < excludeR);
       this.boids.push(new Boid(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed));
     }
     if (this.boids.length > target) this.boids.length = target;

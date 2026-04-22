@@ -38,6 +38,7 @@ export class Game {
 
   private lastT = 0;
   private placeObstacleBtn: HTMLButtonElement | null = null;
+  private winTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -156,6 +157,7 @@ export class Game {
   }
 
   restart(): void {
+    if (this.winTimer) { clearTimeout(this.winTimer); this.winTimer = null; }
     this.mode = 'play';
     this.elapsed = 0;
     this.holdTimer = 0;
@@ -176,7 +178,9 @@ export class Game {
     this.bannerTitle.textContent = 'PENNED';
     this.bannerSub.textContent = `${this.elapsed.toFixed(1)}s · sandbox unlocked · press R to reset`;
     this.bannerEl.classList.add('show');
-    setTimeout(() => {
+    this.winTimer = setTimeout(() => {
+      this.winTimer = null;
+      if (this.mode !== 'won') return;
       this.bannerEl.classList.remove('show');
       this.mode = 'sandbox';
       this.sandboxPanel.classList.add('show');
