@@ -261,26 +261,31 @@ export class Flock {
       let ny = b.y + b.vy * dt;
 
       // Reflect if the step would cross a wall (fallback for fast boids punching through repulsion).
-      for (let w = 0; w < pen.walls.length; w++) {
-        const wall = pen.walls[w];
-        if (segmentsCross(prevX, prevY, nx, ny, wall.ax, wall.ay, wall.bx, wall.by)) {
-          const wx = wall.bx - wall.ax;
-          const wy = wall.by - wall.ay;
-          const wLen = Math.hypot(wx, wy);
-          if (wLen > 0) {
-            const nwx = -wy / wLen;
-            const nwy = wx / wLen;
-            const vDotN = b.vx * nwx + b.vy * nwy;
-            b.vx -= 2 * vDotN * nwx;
-            b.vy -= 2 * vDotN * nwy;
-            // Dampen slightly and revert the step.
-            b.vx *= 0.85;
-            b.vy *= 0.85;
-            nx = prevX + b.vx * dt;
-            ny = prevY + b.vy * dt;
-            break;
+      // Loop so that crossings near a vertex (two walls in one step) all get handled.
+      for (let iter = 0; iter < 4; iter++) {
+        let hit = false;
+        for (let w = 0; w < pen.walls.length; w++) {
+          const wall = pen.walls[w];
+          if (segmentsCross(prevX, prevY, nx, ny, wall.ax, wall.ay, wall.bx, wall.by)) {
+            const wx = wall.bx - wall.ax;
+            const wy = wall.by - wall.ay;
+            const wLen = Math.hypot(wx, wy);
+            if (wLen > 0) {
+              const nwx = -wy / wLen;
+              const nwy = wx / wLen;
+              const vDotN = b.vx * nwx + b.vy * nwy;
+              b.vx -= 2 * vDotN * nwx;
+              b.vy -= 2 * vDotN * nwy;
+              b.vx *= 0.85;
+              b.vy *= 0.85;
+              nx = prevX + b.vx * dt;
+              ny = prevY + b.vy * dt;
+              hit = true;
+              break;
+            }
           }
         }
+        if (!hit) break;
       }
 
       // Edge wrap

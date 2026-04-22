@@ -1,0 +1,38 @@
+{
+  "date": "2026-04-21",
+  "url": "https://shaan106.github.io/quick-start-panda/",
+  "commit": "73a3b1d",
+  "healthScore": 85,
+  "tier": "standard-static",
+  "verification_mode": "code_review_plus_build_plus_deploy_diff",
+  "issues": [
+    { "id": "BUG-005", "title": "Wall reflection can tunnel through pen corners (single-wall break)", "severity": "high", "category": "functional", "file": "src/flock.ts:264-284" },
+    { "id": "BUG-006", "title": "Space keyup clears repel even if right-click still held", "severity": "medium", "category": "functional", "file": "src/player.ts:77-80" },
+    { "id": "BUG-007", "title": "Blur leaves visible=true with stale cursor; Space can repel from stale position", "severity": "low", "category": "ux", "file": "src/player.ts:82-86" },
+    { "id": "BUG-008", "title": "Dead member winTime never read", "severity": "low", "category": "code-quality", "file": "src/game.ts:25,177" },
+    { "id": "BUG-009", "title": "Resize scales boids by (sx,sy) while pen rebuilds from fractional coords", "severity": "low", "category": "ux", "file": "src/game.ts:141-157" }
+  ],
+  "categoryScores": {
+    "functional": 78,
+    "ux": 92,
+    "content": 100,
+    "accessibility": 85,
+    "links": 100
+  },
+  "unverified": [
+    "60fps @ 250 boids M1 Chrome",
+    "Touch gestures on real device",
+    "Herding feel / tuning",
+    "Visual regression / trail readability",
+    "Restart under all mode transitions (empirical)"
+  ],
+  "verified": [
+    "Live URL returns 200",
+    "JS bundle byte-identical to local build",
+    "tsc + vite build clean",
+    "Viewport lock (no pinch-zoom)",
+    "touch-action: none on canvas",
+    "Pen opening indices correct (1=right, 4=lower-left)",
+    "Prior fixes BUG-001..004 in code and deployed"
+  ]
+}

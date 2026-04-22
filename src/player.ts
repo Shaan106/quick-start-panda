@@ -7,6 +7,8 @@ export class Player {
 
   private keysHeld = new Set<string>();
   private activeTouches = new Map<number, { x: number; y: number }>();
+  private repelFromSpace = false;
+  private repelFromRMB = false;
 
   attach(canvas: HTMLCanvasElement): void {
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -16,8 +18,12 @@ export class Player {
       this.visible = true;
       this.x = e.clientX;
       this.y = e.clientY;
-      if (e.button === 2) this.repel = true;
-      else this.attract = true;
+      if (e.button === 2) {
+        this.repelFromRMB = true;
+        this.repel = true;
+      } else {
+        this.attract = true;
+      }
       canvas.setPointerCapture(e.pointerId);
     });
 
@@ -30,8 +36,12 @@ export class Player {
 
     const release = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
-      if (e.button === 2) this.repel = false;
-      else this.attract = false;
+      if (e.button === 2) {
+        this.repelFromRMB = false;
+        this.repel = this.repelFromSpace;
+      } else {
+        this.attract = false;
+      }
     };
     canvas.addEventListener('pointerup', release);
     canvas.addEventListener('pointercancel', release);
@@ -69,19 +79,28 @@ export class Player {
         e.preventDefault();
         // Only arm repel if we already have a real cursor position.
         // Otherwise Space would repel from (0,0) before the mouse has moved.
-        if (this.visible) this.repel = true;
+        if (this.visible) {
+          this.repelFromSpace = true;
+          this.repel = true;
+        }
       }
       this.keysHeld.add(e.code);
     });
 
     window.addEventListener('keyup', (e) => {
-      if (e.code === 'Space') this.repel = false;
+      if (e.code === 'Space') {
+        this.repelFromSpace = false;
+        this.repel = this.repelFromRMB;
+      }
       this.keysHeld.delete(e.code);
     });
 
     window.addEventListener('blur', () => {
       this.attract = false;
       this.repel = false;
+      this.repelFromSpace = false;
+      this.repelFromRMB = false;
+      this.visible = false;
       this.keysHeld.clear();
     });
   }

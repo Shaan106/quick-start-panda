@@ -22,7 +22,6 @@ export class Game {
   mode: Mode = 'play';
   elapsed = 0;
   holdTimer = 0;
-  winTime = 0;
   pendingObstacle = false;
 
   private hudTimer: HTMLElement;
@@ -161,7 +160,6 @@ export class Game {
     this.mode = 'play';
     this.elapsed = 0;
     this.holdTimer = 0;
-    this.winTime = 0;
     this.flock.obstacles.length = 0;
     this.sandboxSlider.value = String(INITIAL_BOIDS);
     this.sandboxCount.textContent = String(INITIAL_BOIDS);
@@ -174,7 +172,6 @@ export class Game {
 
   private enterWon(): void {
     this.mode = 'won';
-    this.winTime = this.elapsed;
     this.bannerTitle.textContent = 'PENNED';
     this.bannerSub.textContent = `${this.elapsed.toFixed(1)}s · sandbox unlocked · press R to reset`;
     this.bannerEl.classList.add('show');
