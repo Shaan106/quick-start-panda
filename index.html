@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
+    <title>Flock Shepherd</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      canvas {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+      #hud {
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.82);
+        pointer-events: none;
+        font-variant-numeric: tabular-nums;
+      }
+      #hud .row { display: block; }
+      #hud .dim { color: rgba(255,255,255,0.45); }
+      #banner {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        text-align: center;
+      }
+      #banner.show { opacity: 1; }
+      #banner .title { font-size: 28px; letter-spacing: 0.1em; }
+      #banner .sub { font-size: 13px; color: rgba(255,255,255,0.55); letter-spacing: 0.06em; }
+      #sandbox {
+        position: absolute;
+        right: 16px;
+        top: 14px;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        font-size: 12px;
+        color: rgba(255,255,255,0.75);
+        pointer-events: auto;
+        letter-spacing: 0.04em;
+      }
+      #sandbox.show { display: flex; }
+      #sandbox .label { opacity: 0.6; }
+      #sandbox input[type=range] {
+        width: 180px;
+        accent-color: #fff;
+      }
+      #sandbox button {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.35);
+        color: rgba(255,255,255,0.85);
+        padding: 4px 10px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      #sandbox button:hover { border-color: rgba(255,255,255,0.75); }
+      #hint {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: rgba(255,255,255,0.45);
+        letter-spacing: 0.08em;
+        pointer-events: none;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+    <div id="hud">
+      <span class="row" id="hud-timer">0.0s</span>
+      <span class="row dim" id="hud-progress">0 / 0 penned</span>
+    </div>
+    <div id="sandbox">
+      <div><span class="label">boids </span><span id="sandbox-count">150</span></div>
+      <input type="range" id="sandbox-slider" min="50" max="300" step="10" value="150" />
+      <button id="sandbox-clear">clear obstacles</button>
+      <button id="sandbox-reset">reset</button>
+    </div>
+    <div id="banner"><div class="title" id="banner-title"></div><div class="sub" id="banner-sub"></div></div>
+    <div id="hint">hold / tap — attract &nbsp;·&nbsp; space / two-finger — repel &nbsp;·&nbsp; R — restart</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
